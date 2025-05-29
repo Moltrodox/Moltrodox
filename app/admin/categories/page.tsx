@@ -52,7 +52,7 @@ const initialCategories = [
   {
     id: "cat-3",
     name: "Custom Keyboards",
-    slug: "custom-keyboards",
+    slug: "custom-keybosards",
     description: "Premium custom keyboards for enthusiasts",
     productCount: 10,
   },
