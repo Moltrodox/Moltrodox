@@ -24,9 +24,9 @@ export default function Error({
         <div className="container px-4 md:px-6 flex flex-col items-center text-center">
           <FileQuestion className="h-16 w-16 text-gray-400 mb-4" />
           <div className="space-y-3">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl">404 - Page Not Found</h1>
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl">Something went wrong!</h1>
             <p className="max-w-[600px] text-gray-500 md:text-xl">
-              We apologize for the inconvenience. The page you're looking for doesn't exist or has been moved.
+              We apologize for the inconvenience. An error occurred while processing your request.
             </p>
           </div>
           <div className="mt-8 flex gap-4">
