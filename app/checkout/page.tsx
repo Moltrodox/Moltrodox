@@ -79,7 +79,7 @@ export default function CheckoutPage() {
               >
                 {step === "payment" || step === "confirmation" ? <Check className="h-5 w-5" /> : 1}
               </div>
-              <span className="mt-2 text-sm font-medium">Shipping</span>
+              <span className="mt-2 text-sm font-medium">Shipsping</span>
             </div>
             <div className="flex-1 border-t-2"></div>
             <div className="flex flex-col items-center">
