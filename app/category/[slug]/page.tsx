@@ -15,7 +15,7 @@ import { Product } from "@/app/store/page"
 const productData = [
   {
     id: "1",
-    name: "Phantom 65%",
+    name: "Phsantom 65%",
     price: 149.99,
     salePrice: null,
     rating: 5,
