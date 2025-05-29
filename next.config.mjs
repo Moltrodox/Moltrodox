@@ -18,7 +18,8 @@ const nextConfig = {
     } : false,
   },
   experimental: {
-    optimizeCss: true,
+    // Temporarily disable optimizeCss to avoid critters dependency issue
+    optimizeCss: false,
     optimizePackageImports: ['lucide-react'],
   },
 }
