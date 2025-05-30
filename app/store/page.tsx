@@ -62,7 +62,7 @@ const useProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data, error } = await supabase
+        const { data: productsData, error } = await supabase
           .from('products')
           .select('*')
 
@@ -71,7 +71,28 @@ const useProducts = () => {
           return
         }
 
-        setProducts(data || [])
+        // Transform the data to match Product interface
+        const transformedProducts = productsData?.map(p => ({
+          id: p.id,
+          name: p.name,
+          price: Number(p.price),
+          salePrice: p.sale_price ? Number(p.sale_price) : null,
+          rating: Number(p.rating),
+          reviewCount: p.review_count,
+          image: p.image,
+          category: p.category,
+          sale: p.sale,
+          new: p.new,
+          switchType: p.switch_type,
+          layout: p.layout,
+          connectivity: p.connectivity,
+          description: p.description,
+          additionalImages: p.additional_images,
+          stock: p.stock,
+          isNewArrival: p.is_new_arrival
+        })) || []
+
+        setProducts(transformedProducts)
       } catch (error) {
         console.error('Error:', error)
       } finally {
@@ -87,7 +108,7 @@ const useProducts = () => {
 
 // Fetch products from Supabase
 export const getProducts = async () => {
-  const { data, error } = await supabase
+  const { data: productsData, error } = await supabase
     .from('products')
     .select('*')
 
@@ -96,7 +117,26 @@ export const getProducts = async () => {
     return []
   }
 
-  return data as Product[]
+  // Transform the data to match Product interface
+  return productsData?.map(p => ({
+    id: p.id,
+    name: p.name,
+    price: Number(p.price),
+    salePrice: p.sale_price ? Number(p.sale_price) : null,
+    rating: Number(p.rating),
+    reviewCount: p.review_count,
+    image: p.image,
+    category: p.category,
+    sale: p.sale,
+    new: p.new,
+    switchType: p.switch_type,
+    layout: p.layout,
+    connectivity: p.connectivity,
+    description: p.description,
+    additionalImages: p.additional_images,
+    stock: p.stock,
+    isNewArrival: p.is_new_arrival
+  })) || []
 }
 
 // Initial product data
@@ -252,9 +292,27 @@ export default function StorePage() {
   const { addItem: addToWishlist, isInWishlist, removeItem: removeFromWishlist } = useWishlist()
   const { toast } = useToast()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const { products, loading } = useProducts()
+
+  if (error) {
+    return (
+      <div className="container mx-auto py-10 px-4 md:px-6">
+        <div className="text-center py-10">
+          <h2 className="text-2xl font-bold text-red-600 mb-2">Error Loading Products</h2>
+          <p className="text-gray-600">{error}</p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            className="mt-4"
+          >
+            Try Again
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
 
   
