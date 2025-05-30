@@ -8,33 +8,6 @@ import { ArrowRight, Check, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
-// Sample featured products
-const featuredProducts = [
-  {
-    id: "1",
-    name: "Keychron K2 Pro",
-    description: "Wireless mechanical keyboard with hot-swappable switches",
-    price: 89.99,
-    image: "/sitelogo.jpg",
-    badge: "Best Seller",
-  },  
-  {
-    id: "2",
-    name: "Ducky One 3",
-    description: "Premium mechanical keyboard with PBT keycaps",
-    price: 119.99,
-    image: "/sitelogo.jpg",
-    badge: "New Arrival",
-  },
-  {
-    id: "3",
-    name: "GMMK Pro",
-    description: "Customizable mechanical keyboard with aluminum case",
-    price: 169.99,
-    image: "/sitelogo.jpg",
-    badge: "Premium",
-  },
-]
 
 // Hero carousel images
 const heroSlides = [
@@ -138,13 +111,6 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="py-16 md:py-24 bg-gradient-to-r from-gray-50 to-gray-100">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="mb-16 text-left">
-            <h2 className="mb-4 text-2xl font-bold md:text-4xl text-black">Why Choose Keyboard Haven</h2>
-            <p className="mx-auto max-w-[700px] text-gray-600 md:text-lg">
-              We provide the highest quality mechanical keyboards and accessories with exceptional service
-            </p>
-          </div>
-          
           <div className="grid gap-8 md:grid-cols-3">
             {[
               {
@@ -231,63 +197,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between">
-            <div>
-              <Badge variant="outline" className="mb-3 text-indigo-600 border-indigo-200 bg-indigo-50 px-3">Featured Collection</Badge>
-              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Featured Products</h2>
-              <p className="max-w-[500px] text-gray-600 md:text-lg">
-                Explore our handpicked selection of premium mechanical keyboards
-              </p>
-            </div>
-            <Button variant="outline" size="lg" className="hidden md:flex group" asChild>
-              <Link href="/store" className="flex items-center">
-                View All Products <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featuredProducts.map((product) => (
-              <Link key={product.id} href={`/product/${product.id}`} className="group">
-                <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:shadow-md">
-                  <div className="relative h-72 w-full overflow-hidden">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    {product.badge && (
-                      <Badge className="absolute right-3 top-3 bg-indigo-600 hover:bg-indigo-700">{product.badge}</Badge>
-                    )}
-                  </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <h3 className="mb-2 text-xl font-medium group-hover:text-indigo-600 transition-colors">{product.name}</h3>
-                    <p className="mb-4 flex-1 text-gray-500">{product.description}</p>
-                    <div className="mt-auto flex items-center justify-between">
-                      <span className="text-lg font-bold">${product.price.toFixed(2)}</span>
-                      <Button size="sm" className="rounded-full group-hover:bg-indigo-700">
-                        View Details
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-10 text-center md:hidden">
-            <Button variant="outline" size="lg" className="group" asChild>
-              <Link href="/store" className="flex items-center justify-center">
-                View All Products <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
     </main>
   )
 }

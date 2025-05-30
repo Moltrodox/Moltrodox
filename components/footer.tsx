@@ -34,18 +34,17 @@ export function Footer() {
         </div>
       </div>
       
-      <div className="container mx-auto px-4 py-12 md:px-6 md:py-16 max-w-7xl">
-        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
-          <div className="space-y-6 md:col-span-2">
+      <div className="container mx-auto px-6 mt-16 py-12 md:px-6 md:py-6">
+        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-5">
+          <div className="space-y-6">
             <div className="flex items-center space-x-2">
               <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center">
                 <span className="text-black font-bold text-lg">K</span>
               </div>
               <h3 className="text-xl font-bold text-white">KeyboardHaven</h3>
             </div>
-            <p className="max-w-xs text-gray-400">
-              Premium mechanical keyboards for enthusiasts, gamers, and professionals. 
-              Elevate your typing experience with our high-quality products.
+            <p className="text-sm text-gray-400">
+              Premium mechanical keyboards for enthusiasts, gamers, and professionals.
             </p>
             <div className="flex space-x-4">
               <Link href="#" className="h-10 w-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors">
@@ -66,25 +65,12 @@ export function Footer() {
               </Link>
             </div>
             
-            <div className="space-y-3 pt-2">
-              <div className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-indigo-400" />
-                <span className="text-sm">123 Keyboard St, Tech City, TC 12345</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-indigo-400" />
-                <span className="text-sm">+1 (555) 123-4567</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-indigo-400" />
-                <span className="text-sm">support@keyboardhaven.com</span>
-              </div>
-            </div>
+
           </div>
           
           <div className="space-y-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white pb-1 border-b border-gray-800">Shop</h4>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+            <ul className="space-y-3 text-sm">
               <li>
                 <Link href="/store" className="hover:text-white transition-colors flex items-center">
                   <span className="h-1 w-1 bg-indigo-500 rounded-full mr-2"></span>
@@ -120,7 +106,7 @@ export function Footer() {
           
           <div className="space-y-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white pb-1 border-b border-gray-800">Company</h4>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+            <ul className="space-y-3 text-sm">
               <li>
                 <Link href="/about" className="hover:text-white transition-colors flex items-center">
                   <span className="h-1 w-1 bg-indigo-500 rounded-full mr-2"></span>
@@ -150,7 +136,7 @@ export function Footer() {
           
           <div className="space-y-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white pb-1 border-b border-gray-800">Support</h4>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+            <ul className="space-y-3 text-sm">
               <li>
                 <Link href="/faq" className="hover:text-white transition-colors flex items-center">
                   <span className="h-1 w-1 bg-indigo-500 rounded-full mr-2"></span>
@@ -189,6 +175,24 @@ export function Footer() {
               </li>
             </ul>
           </div>
+
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-white pb-1 border-b border-gray-800">Contact Us</h4>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <MapPin className="h-4 w-4 text-indigo-400" />
+                <span className="text-sm">123 Keyboard St, Tech City, TC 12345</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="h-4 w-4 text-indigo-400" />
+                <span className="text-sm">+1 (555) 123-4567</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="h-4 w-4 text-indigo-400" />
+                <span className="text-sm">support@keyboardhaven.com</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <Separator className="my-8 bg-gray-800" />
@@ -202,9 +206,7 @@ export function Footer() {
               <span className="text-sm">We accept all major payment methods</span>
             </div>
             
-            <div className="flex items-center gap-2">
-              {/* Using local image with white background */}
-            </div>
+           
           </div>
         </div>
       </div>
