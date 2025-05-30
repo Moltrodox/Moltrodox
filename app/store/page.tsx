@@ -58,52 +58,61 @@ export const categories = [
 const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchProducts = async () => {
+    try {
+      const { data: productsData, error: supabaseError } = await supabase
+        .from('products')
+        .select('*')
+
+      if (supabaseError) {
+        setError('Failed to load products')
+        console.error('Error fetching products:', supabaseError)
+        return
+      }
+
+      if (!productsData || productsData.length === 0) {
+        setError('No products found')
+        return
+      }
+
+      // Transform the data to match Product interface
+      const transformedProducts = productsData.map(p => ({
+        id: p.id,
+        name: p.name,
+        price: Number(p.price),
+        salePrice: p.sale_price ? Number(p.sale_price) : null,
+        rating: Number(p.rating),
+        reviewCount: p.review_count,
+        image: '/products/placeholder.svg',  // Always use placeholder for now
+        category: p.category,
+        sale: p.sale,
+        new: p.new,
+        switchType: p.switch_type,
+        layout: p.layout,
+        connectivity: p.connectivity,
+        description: p.description,
+        additionalImages: ['/products/placeholder.svg', '/products/placeholder.svg'],  // Always use placeholders
+        stock: p.stock,
+        isNewArrival: p.is_new_arrival
+      }))
+
+      setProducts(transformedProducts)
+      setError(null)
+    } catch (error) {
+      setError('An unexpected error occurred')
+      console.error('Error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data: productsData, error } = await supabase
-          .from('products')
-          .select('*')
-
-        if (error) {
-          console.error('Error fetching products:', error)
-          return
-        }
-
-        // Transform the data to match Product interface
-        const transformedProducts = productsData?.map(p => ({
-          id: p.id,
-          name: p.name,
-          price: Number(p.price),
-          salePrice: p.sale_price ? Number(p.sale_price) : null,
-          rating: Number(p.rating),
-          reviewCount: p.review_count,
-          image: p.image,
-          category: p.category,
-          sale: p.sale,
-          new: p.new,
-          switchType: p.switch_type,
-          layout: p.layout,
-          connectivity: p.connectivity,
-          description: p.description,
-          additionalImages: p.additional_images,
-          stock: p.stock,
-          isNewArrival: p.is_new_arrival
-        })) || []
-
-        setProducts(transformedProducts)
-      } catch (error) {
-        console.error('Error:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchProducts()
   }, [])
 
-  return { products, loading }
+  return { products, loading, error, refetch: fetchProducts }
 }
 
 // Fetch products from Supabase
@@ -288,14 +297,13 @@ export const productData: Product[] = [
 
 
 export default function StorePage() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const { products, loading, error, refetch } = useProducts()
   const { addItem: addToCart } = useCart()
   const { addItem: addToWishlist, isInWishlist, removeItem: removeFromWishlist } = useWishlist()
   const { toast } = useToast()
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const { products, loading } = useProducts()
 
   if (error) {
     return (
@@ -465,6 +473,7 @@ export default function StorePage() {
                             className="rounded-full bg-white/80 backdrop-blur-sm hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
                             onClick={(e) => {
                               e.preventDefault();
+                              e.stopPropagation();
                               if (isInWishlist(product.id)) {
                                 removeFromWishlist(product.id);
                                 toast({
@@ -476,7 +485,7 @@ export default function StorePage() {
                                   id: product.id,
                                   name: product.name,
                                   price: product.price,
-                                  image: product.image,
+                                  image: '/products/placeholder.svg',
                                   category: product.category,
                                   switchType: product.switchType,
                                   layout: product.layout
@@ -492,7 +501,11 @@ export default function StorePage() {
                           </Button>
                           <Button 
                             className="rounded-full bg-white/80 backdrop-blur-sm hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => handleAddToCart(e, product)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleAddToCart(e, product);
+                            }}
                           >
                             <ShoppingCart className="h-4 w-4" />
                           </Button>
