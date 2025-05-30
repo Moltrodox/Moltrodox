@@ -85,7 +85,7 @@ const useProducts = () => {
         salePrice: p.sale_price ? Number(p.sale_price) : null,
         rating: Number(p.rating),
         reviewCount: p.review_count,
-        image: '/products/placeholder.svg',  // Always use placeholder for now
+        image: '/placeholder.svg',  // Always use placeholder for now
         category: p.category,
         sale: p.sale,
         new: p.new,
@@ -93,7 +93,7 @@ const useProducts = () => {
         layout: p.layout,
         connectivity: p.connectivity,
         description: p.description,
-        additionalImages: ['/products/placeholder.svg', '/products/placeholder.svg'],  // Always use placeholders
+        additionalImages: ['/placeholder.svg', '/placeholder.svg'],  // Always use placeholders
         stock: p.stock,
         isNewArrival: p.is_new_arrival
       }))
@@ -351,10 +351,10 @@ export default function StorePage() {
   }
   
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* Header */}
       <section className="w-full py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-900 to-black text-white">
-        <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">Our Products</h1>
@@ -362,7 +362,7 @@ export default function StorePage() {
                 Discover our premium selection of mechanical keyboards
               </p>
             </div>
-            <div className="w-full max-w-md space-y-2 mx-auto">
+            <div className="w-full max-w-2xl space-y-2 mx-auto">
               <Button 
                 onClick={() => setIsSearchOpen(true)}
                 className="w-full flex items-center justify-between bg-white/10 hover:bg-white/20 text-white border-gray-700 h-10 px-4 py-2"
@@ -380,7 +380,7 @@ export default function StorePage() {
 
       {/* Store */}
       <section className="w-full py-4 md:py-24 bg-white">
-        <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col gap-2">
             {/* Categories Carousel */}
             <div className="relative mb-8 overflow-hidden">
@@ -470,22 +470,29 @@ export default function StorePage() {
                         />
                        
                       </div>
-                      <CardContent className="p-4 flex-grow flex flex-col justify-between">
+                      <CardContent className="container mx-auto px-4 md:px-6 p-4 flex-grow flex flex-col justify-between">
                         <div className="space-y-2">
                           <h3 className="font-medium line-clamp-2 h-12">{product.name}</h3>
-                          <div className="flex items-center gap-1 text-sm text-yellow-500">
-                            {Array(5)
-                              .fill(0)
-                              .map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className={`h-4 w-4 ${i < product.rating ? "fill-current" : "text-gray-300"}`}
-                                />
-                              ))}
-                            <span className="text-gray-500 text-xs ml-1">({product.reviewCount})</span>
-                          </div>
-                          <div className="text-xs text-gray-500 line-clamp-2 h-8">
-                            {product.description || `Premium ${product.category} keyboard with exceptional build quality and performance.`}
+                          <div className="flex items-center gap-2 max-w-3xl mx-auto">
+                            <div className="relative flex-1">
+                              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                              <Input
+                                type="search"
+                                placeholder="Search keyboards..."
+                                className="pl-8 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                                onClick={() => setIsSearchOpen(true)}
+                              />
+                            </div>
+                            <Button
+                              variant="outline"
+                              className="hidden sm:flex border-white/20 text-white hover:bg-white/10"
+                              onClick={() => setIsSearchOpen(true)}
+                            >
+                              <span className="sr-only">Search</span>
+                              <kbd className="pointer-events-none ml-2 select-none rounded border bg-white/10 px-1.5 font-mono text-[10px] font-medium text-gray-400">
+                                ⌘K
+                              </kbd>
+                            </Button>
                           </div>
                           <div className="flex items-center justify-between pt-2">
                             <div>
