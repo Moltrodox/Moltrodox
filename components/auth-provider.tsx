@@ -12,6 +12,7 @@ type User = {
 type AuthContextType = {
   user: User | null
   login: (email: string, password: string) => Promise<boolean>
+  register: (email: string, password: string) => Promise<boolean>
   logout: () => void
   isLoading: boolean
 }
@@ -31,23 +32,81 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
 
-  // Load user from localStorage on initial render
+  // Check and restore session on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem("user")
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+    const checkSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error) throw error
+
+        if (session?.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('is_admin')
+            .eq('id', session.user.id)
+            .single()
+
+          setUser({
+            email: session.user.email!,
+            isAdmin: profile?.is_admin ?? false
+          })
+        }
+      } catch (error) {
+        console.error('Session error:', error)
+      } finally {
+        setIsLoading(false)
+      }
     }
-    setIsLoading(false)
+
+    checkSession()
+
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('is_admin')
+            .eq('id', session.user.id)
+            .single()
+
+          setUser({
+            email: session.user.email!,
+            isAdmin: profile?.is_admin ?? false
+          })
+        } else {
+          setUser(null)
+        }
+      }
+    )
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
-  // Save user to localStorage whenever it changes
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user))
-    } else {
-      localStorage.removeItem("user")
+  const register = async (email: string, password: string): Promise<boolean> => {
+    try {
+      setIsLoading(true)
+
+      const { data: { user }, error } = await supabase.auth.signUp({
+        email,
+        password,
+      })
+
+      if (error) {
+        console.error('Registration error:', error.message)
+        return false
+      }
+
+      return true
+    } catch (error) {
+      console.error('Registration error:', error)
+      return false
+    } finally {
+      setIsLoading(false)
     }
-  }, [user])
+  }
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -67,18 +126,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return false
       }
 
-      // Get user's custom data
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('is_admin')
-        .eq('id', user.id)
-        .single()
-
-      setUser({
-        email: user.email!,
-        isAdmin: profile?.is_admin ?? false
-      })
-      
       return true
     } catch (error) {
       console.error('Login error:', error)
@@ -88,13 +135,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const logout = () => {
-    setUser(null)
-    router.push("/")
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut()
+      setUser(null)
+      router.push("/")
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

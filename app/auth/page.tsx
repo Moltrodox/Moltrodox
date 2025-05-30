@@ -30,7 +30,7 @@ export default function AuthPage() {
   
   const router = useRouter()
   const { toast } = useToast()
-  const { login } = useAuth()
+  const { login, register } = useAuth()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -100,22 +100,23 @@ export default function AuthPage() {
     }
 
     try {
-      // Simulate API call for registration
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Auto-login after registration
-      const success = await login(email, password)
+      const success = await register(email, password)
       
       if (success) {
-      toast({
+        toast({
           title: "Registration Successful",
-          description: "Your account has been created and you are now logged in.",
-      })
-      router.push("/dashboard")
+          description: "Please check your email to confirm your account.",
+        })
+        
+        // Attempt to log in immediately
+        const loginSuccess = await login(email, password)
+        if (loginSuccess) {
+          router.push("/dashboard")
+        }
       } else {
         toast({
           title: "Error",
-          description: "Failed to create account.",
+          description: "Failed to create account. Email might already be in use.",
           variant: "destructive",
         })
       }

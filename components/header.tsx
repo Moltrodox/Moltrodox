@@ -3,7 +3,7 @@
 import { useState, useMemo, memo, lazy, Suspense } from "react"
 import Link from "next/link"
 import { Heart, LogOut, Menu, Search, ShoppingCart, User, X } from "lucide-react"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -49,6 +49,21 @@ export function Header() {
   const { items: cartItems } = useCart()
   const { items: wishlistItems } = useWishlist()
   const { user, logout } = useAuth()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      // Close any open menus/sheets
+      const sheet = document.querySelector('[data-state="open"]')
+      if (sheet) {
+        const closeButton = sheet.querySelector('button[aria-label="Close"]')
+        closeButton?.click()
+      }
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+  }
 
   const routes = useMemo(() => [
     { href: "/", label: "Home" },
@@ -87,7 +102,7 @@ export function Header() {
                     <Button 
                       variant="destructive" 
                       className="w-full"
-                      onClick={logout}
+                      onClick={() => void handleLogout()}
                     >
                       <LogOut className="mr-2 h-4 w-4" />
                       Sign Out
@@ -143,7 +158,7 @@ export function Header() {
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout} className="text-red-500">
+                  <DropdownMenuItem onClick={() => void handleLogout()} className="text-red-500">
                     <LogOut className="mr-2 h-4 w-4" />
                     Sign out
                   </DropdownMenuItem>
