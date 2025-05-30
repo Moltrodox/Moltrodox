@@ -2,7 +2,17 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/utils/supabase/client"
+import { createClient } from '@supabase/supabase-js'
+
+const getSupabase = () => {
+  if (typeof window === 'undefined') {
+    throw new Error('Supabase client can only be used in the browser')
+  }
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
 
 type User = {
   email: string
@@ -36,11 +46,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession()
+        const { data: { session }, error } = await getSupabase().auth.getSession()
         if (error) throw error
 
         if (session?.user) {
-          const { data: profile } = await supabase
+          const { data: profile } = await getSupabase()
             .from('profiles')
             .select('is_admin')
             .eq('id', session.user.id)
@@ -61,10 +71,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkSession()
 
     // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = getSupabase().auth.onAuthStateChange(
       async (event, session) => {
         if (session?.user) {
-          const { data: profile } = await supabase
+          const { data: profile } = await getSupabase()
             .from('profiles')
             .select('is_admin')
             .eq('id', session.user.id)
@@ -89,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setIsLoading(true)
 
-      const { data: { user }, error } = await supabase.auth.signUp({
+      const { data: { user }, error } = await getSupabase().auth.signUp({
         email,
         password,
       })
@@ -112,7 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setIsLoading(true)
 
-      const { data: { user }, error } = await supabase.auth.signInWithPassword({
+      const { data: { user }, error } = await getSupabase().auth.signInWithPassword({
         email,
         password,
       })
@@ -137,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
-      await supabase.auth.signOut()
+      await getSupabase().auth.signOut()
       setUser(null)
       router.push("/")
     } catch (error) {
