@@ -15,6 +15,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth-provider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { supabase } from "@/utils/supabase/client"
 
 export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -31,6 +32,35 @@ export default function AuthPage() {
   const router = useRouter()
   const { toast } = useToast()
   const { login, register } = useAuth()
+
+  const handleGoogleLogin = async () => {
+    try {
+      setIsLoading(true)
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Something went wrong'
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -252,6 +282,32 @@ export default function AuthPage() {
                     </>
                   )}
             </Button>
+
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white px-2 text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-11 border-gray-300 hover:bg-gray-50"
+              onClick={handleGoogleLogin}
+              disabled={isLoading}
+            >
+              <Image
+                src="/google.svg"
+                alt="Google"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              Continue with Google
+            </Button>
           </form>
 
           <div className="mt-6">
@@ -401,6 +457,32 @@ export default function AuthPage() {
                       Create Account
                     </>
                   )}
+                </Button>
+
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                  </div>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-11 border-gray-300 hover:bg-gray-50"
+                  onClick={handleGoogleLogin}
+                  disabled={isLoading}
+                >
+                  <Image
+                    src="/google.svg"
+                    alt="Google"
+                    width={20}
+                    height={20}
+                    className="mr-2"
+                  />
+                  Continue with Google
                 </Button>
               </form>
             </TabsContent>
