@@ -132,7 +132,7 @@ export function Header() {
             </SheetContent>
           </Sheet>
           <Link href="/" prefetch={false} className="mr-6 flex items-center gap-2 text-lg font-semibold">
-            KeyboardsHaven
+            KeyboardssHaven
           </Link>
           <nav className="hidden md:flex flex-1 items-center gap-6 text-sm">
             {routes.map((route) => (
