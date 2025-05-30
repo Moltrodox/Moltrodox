@@ -1,10 +1,37 @@
+'use client'
+
+import { useState } from 'react'
 import { Mail, MapPin, Phone } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { sendEmail } from './actions'
 
 export default function ContactPage() {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setLoading(true)
+    setError(null)
+
+    try {
+      const formData = new FormData(event.target)
+      const result = await sendEmail(formData)
+      if (result.error) {
+        setError(result.error)
+      } else {
+        event.target.reset()
+      }
+    } catch (error) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -33,7 +60,7 @@ export default function ContactPage() {
                   Fill out the form below and we'll get back to you as soon as possible.
                 </p>
               </div>
-              <form className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label htmlFor="first-name" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -41,7 +68,9 @@ export default function ContactPage() {
                     </label>
                     <Input
                       id="first-name"
+                      name="first-name"
                       placeholder="John"
+                      required
                       className="border-gray-200"
                     />
                   </div>
@@ -51,7 +80,9 @@ export default function ContactPage() {
                     </label>
                     <Input
                       id="last-name"
+                      name="last-name"
                       placeholder="Doe"
+                      required
                       className="border-gray-200"
                     />
                   </div>
@@ -62,8 +93,10 @@ export default function ContactPage() {
                   </label>
                   <Input
                     id="email"
+                    name="email"
                     placeholder="john.doe@example.com"
                     type="email"
+                    required
                     className="border-gray-200"
                   />
                 </div>
@@ -73,7 +106,9 @@ export default function ContactPage() {
                   </label>
                   <Input
                     id="subject"
+                    name="subject"
                     placeholder="How can we help you?"
+                    required
                     className="border-gray-200"
                   />
                 </div>
@@ -83,13 +118,16 @@ export default function ContactPage() {
                   </label>
                   <Textarea
                     id="message"
+                    name="message"
                     placeholder="Enter your message here"
+                    required
                     className="min-h-[150px] border-gray-200 resize-none"
                   />
                 </div>
-                <Button className="w-full bg-black text-white hover:bg-gray-800">
-                  Send Message
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? 'Sending...' : 'Send Message'}
                 </Button>
+                {error && <p className="text-red-500">{error}</p>}
               </form>
             </div>
 
