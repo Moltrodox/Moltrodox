@@ -41,21 +41,22 @@ export default function AuthPage() {
       
       if (success) {
         toast({
-          title: email === "admin@example.com" ? "Admin Login Success" : "Success",
+          title: "Login Successful",
           description: "You have been logged in successfully.",
         })
-        router.push(email === "admin@example.com" ? "/admin/dashboard" : "/dashboard")
+        router.push("/dashboard")
       } else {
         toast({
           title: "Error",
-          description: "Invalid email or password.",
+          description: "User not found or invalid credentials.",
           variant: "destructive",
         })
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Something went wrong'
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {
@@ -411,7 +412,7 @@ export default function AuthPage() {
         <div className="flex h-full items-center justify-center">
           <div className="relative h-full w-full">
             <Image 
-              src="/keyboard-banner.jpg" 
+              src="/sitelogo.jpg" 
               alt="Mechanical keyboard" 
               fill 
               className="object-cover" 

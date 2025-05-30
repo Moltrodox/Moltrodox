@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { supabase } from "@/utils/supabase/client"
 
 type User = {
   email: string
@@ -51,23 +52,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true)
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      if (email === "admin@example.com" && password === "admin123") {
-        setUser({
-          email,
-          isAdmin: true
-        })
-        return true
-      } else if (email && password) {
-        // For demo, accept any non-empty email/password
-        setUser({
-          email,
-          isAdmin: false
-        })
-        return true
+
+      const { data: { user }, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) {
+        console.error('Login error:', error.message)
+        return false
       }
+
+      if (!user) {
+        return false
+      }
+
+      // Get user's custom data
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', user.id)
+        .single()
+
+      setUser({
+        email: user.email!,
+        isAdmin: profile?.is_admin ?? false
+      })
+      
+      return true
+    } catch (error) {
+      console.error('Login error:', error)
       return false
     } finally {
       setIsLoading(false)
