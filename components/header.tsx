@@ -51,6 +51,9 @@ export function Header() {
   const { user, logout } = useAuth()
   const router = useRouter()
 
+  const cartItemsCount = useMemo(() => cartItems?.length || 0, [cartItems])
+  const wishlistItemsCount = useMemo(() => wishlistItems?.length || 0, [wishlistItems])
+
   const handleLogout = async () => {
     try {
       await logout()
@@ -72,8 +75,7 @@ export function Header() {
     { href: "/contact", label: "Contact" },
   ], []);
 
-  const cartItemsCount = useMemo(() => cartItems.length, [cartItems]);
-  const wishlistItemsCount = useMemo(() => wishlistItems.length, [wishlistItems]);
+
 
   return (
     <>
@@ -96,6 +98,23 @@ export function Header() {
                 ))}
                 {user?.isAdmin && (
                   <MobileNavLink href="/admin/dashboard" label="Admin Dashboard" />
+                )}
+                {user && (
+                  <Link href="/wishlist" prefetch={false}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="relative"
+                      aria-label="Wishlist"
+                    >
+                      <Heart className="h-6 w-6" />
+                      {wishlistItemsCount > 0 && (
+                        <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-600 text-[10px] font-medium text-white flex items-center justify-center">
+                          {wishlistItemsCount}
+                        </span>
+                      )}
+                    </Button>
+                  </Link>
                 )}
                 {user && (
                   <div className="flex items-center gap-2 mt-auto">
@@ -172,23 +191,31 @@ export function Header() {
               </Button>
             )}
             
-            <Button variant="ghost" size="icon" aria-label="Wishlist" asChild>
-              <Link href="/wishlist" className="relative">
-                <Heart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                  {wishlistItemsCount}
-                </span>
-              </Link>
-            </Button>
+            {user && (
+              <Button variant="ghost" size="icon" aria-label="Wishlist" asChild>
+                <Link href="/wishlist" className="relative">
+                  <Heart className="h-5 w-5" />
+                  {wishlistItemsCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-medium text-white">
+                      {wishlistItemsCount}
+                    </span>
+                  )}
+                </Link>
+              </Button>
+            )}
             
-            <Button variant="ghost" size="icon" aria-label="Shopping cart" asChild>
-              <Link href="/cart" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                  {cartItemsCount}
-                </span>
-              </Link>
-            </Button>
+            {user && (
+              <Button variant="ghost" size="icon" aria-label="Shopping cart" asChild>
+                <Link href="/cart" className="relative">
+                  <ShoppingCart className="h-5 w-5" />
+                  {cartItemsCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-medium text-white">
+                      {cartItemsCount}
+                    </span>
+                  )}
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </header>
