@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Search, Star, Eye, Heart, ShoppingCart } from "lucide-react"
+import { Search, Star, Eye, ShoppingCart } from "lucide-react"
+import { supabase } from '@/lib/supabase'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,7 +18,7 @@ import {
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { SearchDialog } from "@/components/search-dialog"
-import { useWishlist } from "@/components/wishlist-provider"
+
 import { useCart } from "@/components/cart-provider"
 import { useToast } from "@/components/ui/use-toast"
 import { CartToast } from "@/components/cart-toast"
@@ -52,17 +53,62 @@ export const categories = [
   { slug: "compact", name: "Compact" },
 ];
 
-// Product data
-export const productData = [
+// Product data will be fetched from Supabase
+const useProducts = () => {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+
+        if (error) {
+          console.error('Error fetching products:', error)
+          return
+        }
+
+        setProducts(data || [])
+      } catch (error) {
+        console.error('Error:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
+  return { products, loading }
+}
+
+// Fetch products from Supabase
+export const getProducts = async () => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+
+  if (error) {
+    console.error('Error fetching products:', error)
+    return []
+  }
+
+  return data as Product[]
+}
+
+// Initial product data
+export const productData: Product[] = [
   {
     id: "1",
     name: "Phantom 65%",
     price: 149.99,
     salePrice: null,
-    rating: 5,
-    reviewCount: 127,
-    image: "/placeholder.svg?height=300&width=300",
-    category: "Mechanical",
+    rating: 4.5,
+    reviewCount: 12,
+    image: "/images/keyboards/phantom-65.jpg",
+    category: "mechanical",
     sale: false,
     new: true,
     switchType: "Cherry MX Brown",
@@ -198,42 +244,16 @@ export const productData = [
   },
 ] as Product[];
 
+
+
 export default function StorePage() {
-  // Memoize expensive calculations
-  const products = useMemo(() => productData, []);
+  const { products, loading } = useProducts()
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const { addItem, removeItem, isInWishlist } = useWishlist()
   const { addItem: addToCart } = useCart()
   const { toast } = useToast()
 
-  const handleWishlistToggle = (e: React.MouseEvent, product: Product) => {
-    e.preventDefault()
-    e.stopPropagation()
-    
-    const isInList = isInWishlist(product.id)
-    
-    if (isInList) {
-      removeItem(product.id)
-      toast({
-        title: "Removed from wishlist",
-        description: `${product.name} has been removed from your wishlist.`,
-      })
-    } else {
-      addItem({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        switchType: product.switchType,
-        layout: product.layout,
-        category: product.category
-      })
-      toast({
-        title: "Added to wishlist",
-        description: `${product.name} has been added to your wishlist.`,
-      })
-    }
-  }
+
   
   const handleAddToCart = (e: React.MouseEvent, product: Product) => {
     e.preventDefault()
@@ -290,18 +310,42 @@ export default function StorePage() {
       </section>
 
       {/* Store */}
-      <section className="w-full py-12 md:py-24 bg-white">
+      <section className="w-full py-4 md:py-24 bg-white">
         <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
           <div className="flex flex-col gap-2">
-            {/* Categories */}
-            <div className="flex flex-wrap justify-left gap-3 mb-1">
-              {categories.map((category) => (
-                <Link key={category.slug} href={`/category/${category.slug}`}>
-                  <Button variant="outline" className="rounded-full">
-                    {category.name}
-                  </Button>
-                </Link>
-              ))}
+            {/* Categories Carousel */}
+            <div className="relative mb-8 overflow-hidden">
+              <div className="flex overflow-x-auto pb-4 scrollbar-hide">
+                <div className="flex space-x-3 ">
+                  <Link href="/store">
+                    <Button 
+                      variant="outline" 
+                      className="whitespace-nowrap rounded-md bg-red-100"
+                    > 
+                      All Products
+                    </Button>
+                  </Link>
+                  {categories.map((category) => (
+                    <Link key={category.slug} href={`/category/${category.slug}`}>
+                      <Button 
+                        variant="outline" 
+                        className="whitespace-nowrap rounded-md hover:bg-gray-100"
+                      >
+                        {category.name}
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <style jsx>{`
+                .scrollbar-hide::-webkit-scrollbar {
+                  display: none;
+                }
+                .scrollbar-hide {
+                  -ms-overflow-style: none;
+                  scrollbar-width: none;
+                }
+              `}</style>
             </div>
 
             {/* Products Grid */}
@@ -355,20 +399,8 @@ export default function StorePage() {
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                        <div className="absolute top-2 right-2 flex gap-2">
+                        <div className="absolute top-2 right-2">
                           <Button 
-                            size="sm" 
-                            variant="secondary" 
-                            className="rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-colors"
-                            onClick={(e) => handleWishlistToggle(e, product)}
-                          >
-                            <Heart 
-                              className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-700'}`} 
-                            />
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="secondary" 
                             className="rounded-full bg-white/80 backdrop-blur-sm hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
                             onClick={(e) => handleAddToCart(e, product)}
                           >
@@ -405,7 +437,7 @@ export default function StorePage() {
                               )}
                             </div>
                             <Link href={`/category/${product.category.toLowerCase()}`}>
-                              <Badge variant="outline" className="text-xs hover:bg-gray-100 cursor-pointer transition-colors">
+                              <Badge className="text-xs hover:bg-gray-100 cursor-pointer transition-colors">
                                 {product.category}
                               </Badge>
                             </Link>
@@ -413,7 +445,7 @@ export default function StorePage() {
                         </div>
                       </CardContent>
                       <CardFooter className="p-4 pt-0 border-t border-gray-100 mt-auto">
-                        <Button variant="outline" className="w-full hover:bg-black hover:text-white transition-colors">
+                        <Button className="w-full hover:bg-black hover:text-white transition-colors">
                           View Details
                         </Button>
                       </CardFooter>

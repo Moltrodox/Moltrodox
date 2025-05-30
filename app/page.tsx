@@ -1,4 +1,4 @@
-"use client"
+  "use client"
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
@@ -136,11 +136,11 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-gradient-to-r from-gray-50 to-gray-100">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">Why Choose KeyboardHaven</h2>
-            <p className="mx-auto max-w-[700px] text-gray-500 md:text-lg">
+          <div className="mb-16 text-left">
+            <h2 className="mb-4 text-2xl font-bold md:text-4xl text-black">Why Choose Keyboard Haven</h2>
+            <p className="mx-auto max-w-[700px] text-gray-600 md:text-lg">
               We provide the highest quality mechanical keyboards and accessories with exceptional service
             </p>
           </div>
@@ -151,7 +151,7 @@ export default function HomePage() {
                 title: "Premium Quality",
                 description: "We source only the finest keyboards and components from reputable manufacturers",
                 icon: (
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-200">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -162,7 +162,7 @@ export default function HomePage() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="h-6 w-6"
+                      className="h-5 w-5"
                     >
                       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                     </svg>
@@ -173,7 +173,7 @@ export default function HomePage() {
                 title: "Expert Support",
                 description: "Our team of keyboard enthusiasts is always ready to help with your questions",
                 icon: (
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-200">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -184,7 +184,7 @@ export default function HomePage() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="h-6 w-6"
+                      className="h-5 w-5"
                     >
                       <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z" />
                       <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" />
@@ -196,7 +196,7 @@ export default function HomePage() {
                 title: "Fast Shipping",
                 description: "We offer quick delivery with careful packaging to ensure your keyboard arrives safely",
                 icon: (
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-200">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -207,7 +207,7 @@ export default function HomePage() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="h-6 w-6"
+                      className="h-5 w-5"
                     >
                       <path d="M5 18H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.19M15 6h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3.19" />
                       <line x1="23" y1="13" x2="23" y2="11" />
@@ -219,10 +219,12 @@ export default function HomePage() {
                 ),
               },
             ].map((feature, i) => (
-              <div key={i} className="flex flex-col items-center text-center">
-                {feature.icon}
-                <h3 className="mb-2 text-xl font-medium">{feature.title}</h3>
-                <p className="text-gray-500">{feature.description}</p>
+              <div key={i} className="p-6 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+                <div className="flex items-center gap-4 mb-3">
+                  {feature.icon}
+                  <h3 className="text-xl font-semibold text-gray-800">{feature.title}</h3>
+                </div>
+                <p className="text-gray-600">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -230,54 +232,57 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between">
             <div>
-              <h2 className="mb-4 text-3xl font-bold md:text-4xl">Featured Products</h2>
-              <p className="max-w-[500px] text-gray-500 md:text-lg">
+              <Badge variant="outline" className="mb-3 text-indigo-600 border-indigo-200 bg-indigo-50 px-3">Featured Collection</Badge>
+              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Featured Products</h2>
+              <p className="max-w-[500px] text-gray-600 md:text-lg">
                 Explore our handpicked selection of premium mechanical keyboards
               </p>
             </div>
-            <Button variant="link" size="lg" className="hidden md:flex" asChild>
-              <Link href="/store">
-                View All Products <ArrowRight className="ml-1 h-4 w-4" />
+            <Button variant="outline" size="lg" className="hidden md:flex group" asChild>
+              <Link href="/store" className="flex items-center">
+                View All Products <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {featuredProducts.map((product) => (
-              <div key={product.id} className="flex flex-col rounded-lg border bg-white shadow">
-                <div className="relative h-64   -full overflow-hidden rounded-t-lg">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform hover:scale-105"
-                  />
-                  {product.badge && (
-                    <Badge className="absolute right-2 top-2">{product.badge}</Badge>
-                  )}
-                </div>
-                <div className="flex flex-1 flex-col p-4">
-                  <h3 className="mb-2 text-xl font-medium">{product.name}</h3>
-                  <p className="mb-4 flex-1 text-gray-500">{product.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold">${product.price.toFixed(2)}</span>
-                    <Button asChild>
-                      <Link href={`/product/${product.id}`}>View Details</Link>
-                    </Button>
+              <Link key={product.id} href={`/product/${product.id}`} className="group">
+                <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:shadow-md">
+                  <div className="relative h-72 w-full overflow-hidden">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    {product.badge && (
+                      <Badge className="absolute right-3 top-3 bg-indigo-600 hover:bg-indigo-700">{product.badge}</Badge>
+                    )}
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="mb-2 text-xl font-medium group-hover:text-indigo-600 transition-colors">{product.name}</h3>
+                    <p className="mb-4 flex-1 text-gray-500">{product.description}</p>
+                    <div className="mt-auto flex items-center justify-between">
+                      <span className="text-lg font-bold">${product.price.toFixed(2)}</span>
+                      <Button size="sm" className="rounded-full group-hover:bg-indigo-700">
+                        View Details
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
-          <div className="mt-8 text-center md:hidden">
-            <Button variant="link" size="lg" asChild>
-              <Link href="/store">
-                View All Products <ArrowRight className="ml-1 h-4 w-4" />
+          <div className="mt-10 text-center md:hidden">
+            <Button variant="outline" size="lg" className="group" asChild>
+              <Link href="/store" className="flex items-center justify-center">
+                View All Products <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
           </div>

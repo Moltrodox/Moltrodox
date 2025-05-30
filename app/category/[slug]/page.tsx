@@ -177,13 +177,13 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
       </section>
 
       {/* Category Content */}
-      <section className="w-full py-12 md:py-8 bg-gray-50">
+      <section className="w-full py-4 md:py-8 bg-gray-50">
         <div className="w-full px-4 md:px-8">
           <div className="flex flex-col gap-8">
             {/* Back to all products */}
-            <div>
-              <Link href="/store">
-                <Button variant="outline" className="flex items-center gap-2">
+            <div className="w-full">
+              <Link href="/store" className="w-full sm:w-auto">
+                <Button variant="outline" className="flex items-center gap-2 w-full sm:w-auto">
                   <ArrowLeft className="h-4 w-4" />
                   Back to All Products
                 </Button>

@@ -13,20 +13,20 @@ export function Footer() {
     <footer className="bg-gradient-to-br from-gray-900 to-black text-gray-300 w-full">
       {/* Newsletter Banner */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600">
-        <div className="container mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <h3 className="text-xl md:text-2xl font-bold text-white">Join Our Newsletter</h3>
-            <p className="text-white/80">Get exclusive offers, new product announcements, and keyboard tips</p>
+        <div className="container mx-auto px-4 py-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+          <div className="space-y-2 text-left md:text-left mb-4 md:mb-0 max-w-md mx-auto md:mx-0">
+            <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">Join Our Newsletter</h3>
+            <p className="text-white/80 text-sm md:text-base">Get exclusive offers, new product announcements, and keyboard tips</p>
           </div>
-          <div className="flex w-full max-w-md gap-2">
+          <div className="flex flex-col sm:flex-row w-full max-w-md gap-3 md:gap-2">
             <div className="relative flex-1">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 placeholder="Enter your email"
-                className="bg-white/10 border-white/20 pl-10 text-white placeholder:text-gray-300 focus-visible:ring-white/50 focus-visible:border-white/50"
+                className="bg-white/10 border-white/20 pl-10 text-white placeholder:text-gray-300 focus-visible:ring-white/50 focus-visible:border-white/50 h-11 w-full"
               />
             </div>
-            <Button className="bg-white text-indigo-600 hover:bg-gray-100 font-medium">
+            <Button className="bg-white text-indigo-600 hover:bg-gray-100 font-medium h-11 w-full sm:w-auto px-6">
               Subscribe
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -84,7 +84,7 @@ export function Footer() {
           
           <div className="space-y-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white pb-1 border-b border-gray-800">Shop</h4>
-            <ul className="space-y-3 text-sm">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
               <li>
                 <Link href="/store" className="hover:text-white transition-colors flex items-center">
                   <span className="h-1 w-1 bg-indigo-500 rounded-full mr-2"></span>
@@ -120,7 +120,7 @@ export function Footer() {
           
           <div className="space-y-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white pb-1 border-b border-gray-800">Company</h4>
-            <ul className="space-y-3 text-sm">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
               <li>
                 <Link href="/about" className="hover:text-white transition-colors flex items-center">
                   <span className="h-1 w-1 bg-indigo-500 rounded-full mr-2"></span>
@@ -150,7 +150,7 @@ export function Footer() {
           
           <div className="space-y-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white pb-1 border-b border-gray-800">Support</h4>
-            <ul className="space-y-3 text-sm">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
               <li>
                 <Link href="/faq" className="hover:text-white transition-colors flex items-center">
                   <span className="h-1 w-1 bg-indigo-500 rounded-full mr-2"></span>
@@ -204,7 +204,6 @@ export function Footer() {
             
             <div className="flex items-center gap-2">
               {/* Using local image with white background */}
-              <img src="https://media.invisioncic.com/p289038/monthly_2022_10/Payment-methods.png.2b9ba23475aaa15189f555f77ec3a549.png" alt="Payment methods" className="h-12 w-auto bg-white rounded p-1" />
             </div>
           </div>
         </div>

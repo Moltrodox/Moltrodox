@@ -4,15 +4,16 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
-import { ChevronLeft, Heart, ShoppingCart, Star, Check, XCircle, Package, Truck, CalendarClock, Shield, Minus, Plus, ThumbsUp, MessageCircle, ChevronRight } from "lucide-react"
+import { ChevronLeft, ShoppingCart, Star, Check, XCircle, Package, Truck, CalendarClock, Shield, Minus, Plus, ThumbsUp, MessageCircle, ChevronRight } from "lucide-react"
+import { supabase } from '@/lib/supabase'
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/components/ui/use-toast"
 import { useCart } from "@/components/cart-provider"
-import { useWishlist } from "@/components/wishlist-provider"
-import { productData } from "@/app/store/page"
+
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProductCard, type Product } from "@/components/product-card"
 import { CartToast } from "@/components/cart-toast"
@@ -23,46 +24,73 @@ export default function ProductPage() {
   const router = useRouter()
   const { toast } = useToast()
   const { addItem } = useCart()
-  const { addItem: addToWishlist, isInWishlist, removeItem: removeFromWishlist } = useWishlist()
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<string>("")
   const [quantity, setQuantity] = useState(1)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
-  
-  // Fetch product data
+
   useEffect(() => {
-    if (params?.id) {
-      setLoading(true)
-      // Find product from our product data
-      const foundProduct = productData.find(p => p.id === params.id)
-      if (foundProduct) {
-        setProduct(foundProduct)
-        setSelectedImage(foundProduct.image)
-        
-        // Find related products (same category or similar)
-        const related = productData
-          .filter(p => p.id !== params.id && 
-            (p.category === foundProduct.category || 
-             p.switchType === foundProduct.switchType ||
-             (foundProduct.similarProducts && foundProduct.similarProducts.includes(p.id))
-            )
-          )
-          .slice(0, 4)
-        setRelatedProducts(related)
-      } else {
-        // Handle product not found
-        toast({
-          title: "Product not found",
-          description: "The requested product could not be found.",
-          variant: "destructive"
-        })
-        router.push("/store")
+    const fetchProduct = async () => {
+      if (!params.id) return
+
+      try {
+        setLoading(true)
+        setError(null)
+
+        const { data: product, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('id', params.id)
+          .single()
+
+        if (error) {
+          console.error('Error fetching product:', error)
+          setError('Product not found')
+          toast({
+            title: "Product not found",
+            description: "The requested product could not be found.",
+            variant: "destructive"
+          })
+          router.push('/store')
+          return
+        }
+
+        if (!product) {
+          setError('Product not found')
+          toast({
+            title: "Product not found",
+            description: "The requested product could not be found.",
+            variant: "destructive"
+          })
+          router.push('/store')
+          return
+        }
+
+        setProduct(product)
+        setSelectedImage(product.image)
+
+        // Fetch related products from the same category
+        const { data: related } = await supabase
+          .from('products')
+          .select('*')
+          .eq('category', product.category)
+          .neq('id', product.id)
+          .limit(4)
+
+        setRelatedProducts(related || [])
+      } catch (error) {
+        console.error('Error:', error)
+        setError('An error occurred while fetching the product')
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
-  }, [params?.id, router, toast])
-  
+
+    fetchProduct()
+  }, [params.id, router, toast])
+
   const handleAddToCart = () => {
     if (!product) return
     
@@ -87,45 +115,21 @@ export default function ProductPage() {
     })
   }
   
-  const toggleWishlist = () => {
-    if (!product) return
 
-    if (isInWishlist(product.id)) {
-      removeFromWishlist(product.id)
-      toast({
-        title: "Removed from wishlist",
-        description: `${product.name} has been removed from your wishlist.`,
-      })
-    } else {
-      addToWishlist({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        category: product.category,
-        switchType: product.switchType,
-        layout: product.layout
-      })
-      toast({
-        title: "Added to wishlist",
-        description: `${product.name} has been added to your wishlist.`,
-      })
-    }
-  }
-  
+
   const incrementQuantity = () => {
-    setQuantity(prev => prev + 1)
+    setQuantity((prev: number) => prev + 1)
   }
   
   const decrementQuantity = () => {
-    setQuantity(prev => (prev > 1 ? prev - 1 : 1))
+    setQuantity((prev: number) => (prev > 1 ? prev - 1 : 1))
   }
   
   if (loading || !product) {
     return (
       <div className="container mx-auto py-10 min-h-screen flex justify-center items-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold">Loading product...</h2>
+          <h2 className="text-2xl font-bold">{error || 'Loading product...'}</h2>
           <p className="text-muted-foreground">Please wait while we fetch the product details.</p>
         </div>
       </div>
@@ -167,7 +171,7 @@ export default function ProductPage() {
   ];
 
   return (
-    <div className="container mx-auto py-10 min-h-screen">
+    <div className="container mx-auto px-4 md:px-6 py-10 min-h-screen">
       <div className="mb-6 flex flex-col space-y-3 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
         <Breadcrumb>
           <BreadcrumbList>
@@ -206,18 +210,18 @@ export default function ProductPage() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Product Images */}
-            <div className="space-y-4">
+        {/* Product Images */}
+        <div className="space-y-4">
           <div className="aspect-square rounded-lg overflow-hidden border bg-white">
-                <Image
+            <Image
               src={selectedImage || product.image}
-                  alt={product.name}
-                  width={600}
-                  height={600}
+              alt={product.name}
+              width={600}
+              height={600}
               className="w-full h-full object-cover"
               priority
-                />
-              </div>
+            />
+          </div>
           
           <div className="flex gap-2 overflow-auto pb-2">
             <button
@@ -393,7 +397,7 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Add to Cart & Wishlist */}
+            {/* Add to Cart */}
             <div className="flex gap-3 mt-6">
               <Button 
                 onClick={handleAddToCart} 
@@ -402,19 +406,7 @@ export default function ProductPage() {
               >
                 <ShoppingCart className="mr-2 h-4 w-4" />
                 {product.stock === "pre-order" ? "Pre-Order Now" : "Add to Cart"}
-                  </Button>
-                  <Button
-                variant={isInWishlist(product.id) ? "secondary" : "outline"}
-                    onClick={toggleWishlist}
-                className={isInWishlist(product.id) ? "bg-red-50 hover:bg-red-100" : ""}
-                  >
-                    <Heart
-                  className={`h-4 w-4 mr-2 ${
-                    isInWishlist(product.id) ? "fill-red-500 text-red-500" : ""
-                  }`}
-                    />
-                {isInWishlist(product.id) ? "In Wishlist" : "Add to Wishlist"}
-                  </Button>
+              </Button>
             </div>
 
             {/* Warranty Info */}
