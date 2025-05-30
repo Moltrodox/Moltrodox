@@ -468,48 +468,7 @@ export default function StorePage() {
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                        <div className="absolute top-2 right-2 flex gap-2">
-                          <Button 
-                            className="rounded-full bg-white/80 backdrop-blur-sm hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              if (isInWishlist(product.id)) {
-                                removeFromWishlist(product.id);
-                                toast({
-                                  title: "Removed from wishlist",
-                                  description: `${product.name} has been removed from your wishlist.`,
-                                });
-                              } else {
-                                addToWishlist({
-                                  id: product.id,
-                                  name: product.name,
-                                  price: product.price,
-                                  image: '/products/placeholder.svg',
-                                  category: product.category,
-                                  switchType: product.switchType,
-                                  layout: product.layout
-                                });
-                                toast({
-                                  title: "Added to wishlist",
-                                  description: `${product.name} has been added to your wishlist.`,
-                                });
-                              }
-                            }}
-                          >
-                            <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''}`} />
-                          </Button>
-                          <Button 
-                            className="rounded-full bg-white/80 backdrop-blur-sm hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleAddToCart(e, product);
-                            }}
-                          >
-                            <ShoppingCart className="h-4 w-4" />
-                          </Button>
-                        </div>
+                       
                       </div>
                       <CardContent className="p-4 flex-grow flex flex-col justify-between">
                         <div className="space-y-2">

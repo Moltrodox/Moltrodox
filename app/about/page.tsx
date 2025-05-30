@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button"
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* Hero Section */}
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-br from-gray-900 to-black text-white">
-        <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">About KeyboardHaven</h1>
@@ -23,7 +23,7 @@ export default function AboutPage() {
 
       {/* Our Story */}
       <section className="w-full py-12 md:py-24 bg-gray-50">
-        <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
             <div className="space-y-4">
               <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">Our Story</div>
@@ -53,7 +53,7 @@ export default function AboutPage() {
 
       {/* Our Values */}
       <section className="w-full py-12 md:py-24 bg-white">
-        <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Our Values</h2>
@@ -80,7 +80,7 @@ export default function AboutPage() {
 
       {/* Team */}
       <section className="w-full py-12 md:py-24 bg-gray-50">
-        <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Meet Our Team</h2>
@@ -112,7 +112,7 @@ export default function AboutPage() {
 
       {/* CTA */}
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-br from-gray-900 to-black text-white">
-        <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Ready to Elevate Your Typing Experience?</h2>

@@ -4,10 +4,10 @@ import { ContactForm } from './contact-form'
 export default function ContactPage(): JSX.Element {
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* Hero Section */}
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-br from-gray-900 to-black text-white">
-        <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">Contact Us</h1>
@@ -21,7 +21,7 @@ export default function ContactPage(): JSX.Element {
 
       {/* Contact Form and Info */}
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
-        <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
             {/* Contact Form */}
             <div className="space-y-6">
@@ -117,7 +117,7 @@ export default function ContactPage(): JSX.Element {
       </section>
 
       {/* Map Section */}
-      <section className="w-full h-96 bg-gray-200">
+      <section className="container mx-auto px-4 md:px-6 h-96 bg-gray-200">
         <div className="w-full h-full flex items-center justify-center">
           <p className="text-gray-500">Interactive Map Would Go Here</p>
         </div>
