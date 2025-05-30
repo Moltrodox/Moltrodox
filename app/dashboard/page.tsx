@@ -32,7 +32,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="container max-w-full py-10 px-4 md:px-6 lg:px-8">
+    <div className="container mx-auto py-10 px-4 md:px-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Welcome, {user.email.split('@')[0]}</h1>
         <p className="text-gray-500">Manage your orders, wishlist, and account settings.</p>
